@@ -19,9 +19,8 @@ public class MusicManager {
     // ------------------------------------------------------------
     public MusicManager() {
         // Preload your music files here
-        loadTrack("menu", "/audio/music/menu_theme.wav");
-        loadTrack("level1", "/audio/music/level1_theme.wav");
-        loadTrack("boss", "/audio/music/boss_theme.wav");
+        loadTrack("playing", "/audio/music/playing_theme.wav");
+
     }
 
     // ------------------------------------------------------------

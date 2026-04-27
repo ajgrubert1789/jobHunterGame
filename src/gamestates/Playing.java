@@ -1,5 +1,6 @@
 package gamestates;
 
+import Audio.MusicManager;
 import entities.EnemyManager;
 import entities.Player;
 import items.ItemManager;
@@ -18,6 +19,7 @@ public class Playing extends State implements StateMethods {
     private EnemyManager enemyManager;
     private DialogueManager dialogueManager;
     private ItemManager itemManager;
+    private MusicManager musicManager;
 
     // ------------------------------------------------------------
     // Constructor
@@ -32,6 +34,8 @@ public class Playing extends State implements StateMethods {
     // ------------------------------------------------------------
     private void initClasses() {
         dialogueManager = game.getDialogueManager();
+        musicManager = new MusicManager();
+        musicManager.play("playing");
         levelManager    = new LevelManager(game);
         itemManager     = new ItemManager(levelManager, game);
         enemyManager    = new EnemyManager(levelManager, game);
@@ -54,6 +58,9 @@ public class Playing extends State implements StateMethods {
         enemyManager.update();
         enemyManager.checkPlayerHit(player);
 
+
+
+
         game.getCamera().update(
                 (int) player.getX(),
                 (int) player.getY()
@@ -62,6 +69,8 @@ public class Playing extends State implements StateMethods {
         levelManager.update();
         itemManager.update(player);
         dialogueManager.update();
+
+
     }
 
     // ------------------------------------------------------------
