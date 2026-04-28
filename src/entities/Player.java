@@ -116,7 +116,7 @@ public class Player extends Entity {
         setAnimation();
     }
 
-    public void render(Graphics g) {
+    public void draw(Graphics g) {
         float camX = game.getCamera().getX();
         float camY = game.getCamera().getY();
 

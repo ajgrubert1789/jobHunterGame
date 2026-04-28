@@ -81,7 +81,7 @@ public class Playing extends State implements StateMethods {
         levelManager.draw(g);
         itemManager.draw(g);
         enemyManager.draw(g);
-        player.render(g);
+        player.draw(g);
 
         dialogueManager.draw(g, game.getCamera().getX(), game.getCamera().getY());
     }

@@ -16,72 +16,84 @@ public class Congratulations implements StateMethods {
 
     private BufferedImage background;
 
-    private final List<BufferedImage> characters = new ArrayList<>();
+    private BufferedImage[][] animations;
+    private int aniTick, aniIndex, aniSpeed = 20;
+    private int[] characterFrameCounts = {24, 25, 10};
+    private double[] characterScales = {0.4, 0.4, 0.2}; // Player, Dave, Robot
+
+
+//    private final List<BufferedImage> characters = new ArrayList<>();
     private final List<Point> characterPositions = new ArrayList<>();
 
-    public Congratulations(Game game, Playing playing) {
+    public Congratulations(Game game) {
         this.game = game;
         initClasses();
     }
 
     private void initClasses() {
         background = LoadSave.GetSpriteAtlas(LoadSave.CONGRATS_BACKGROUND);
+        animations = new BufferedImage[3][25]; // Max frames is 25
 
+        // 1. Player (VICTORY state = row 7)
         BufferedImage playerSheet = LoadSave.GetSpriteAtlas(LoadSave.PLAYER_ATLAS);
-        BufferedImage daveSheet   = LoadSave.GetSpriteAtlas(LoadSave.DAVE_SPRITE);
-        BufferedImage robotSheet  = LoadSave.GetSpriteAtlas(LoadSave.ROBOT_SPRITE);
+        for (int i = 0; i < 24; i++)
+            animations[0][i] = playerSheet.getSubimage(i * 256, 6 * 256, 256, 256);
 
-        int fw = 256;
-        int fh = 256;
+        // 2. Dave (VICTORY_DAVE state = row 7)
+        BufferedImage daveSheet = LoadSave.GetSpriteAtlas(LoadSave.DAVE_SPRITE);
+        for (int i = 0; i < 25; i++)
+            animations[1][i] = daveSheet.getSubimage(i * 256, 5 * 256, 256, 256);
 
-        BufferedImage playerFrame = playerSheet.getSubimage(0, 0, fw, fh);
-        BufferedImage daveFrame   = daveSheet.getSubimage(0, 0, fw, fh);
-        BufferedImage robotFrame  = robotSheet.getSubimage(0, 0, fw, fh);
+        // 3. Robot (TALK state = row 2)
+        BufferedImage robotSheet = LoadSave.GetSpriteAtlas(LoadSave.ROBOT_SPRITE);
+        for (int i = 0; i < 10; i++)
+            animations[2][i] = robotSheet.getSubimage(i * 256, 2 * 256, 256, 256);
 
-        characters.add(playerFrame);
-        characterPositions.add(new Point(100, 100));
-
-        characters.add(daveFrame);
-        characterPositions.add(new Point(150, 150));
-
-        characters.add(robotFrame);
-        characterPositions.add(new Point(200, 150));
+        // Set Positions (Spaced out for the screen)
+        characterPositions.add(new Point(225, 68)); // Player
+        characterPositions.add(new Point(255, 68)); // Dave
+        characterPositions.add(new Point(225, 110)); // Robot
     }
 
     @Override
     public void update() {
         // No animation needed
+        aniTick++;
+        if (aniTick >= aniSpeed) {
+            aniTick = 0;
+            aniIndex++;
+            if (aniIndex >= 25) aniIndex = 0; // Reset based on the longest animation
+        }
     }
 
     @Override
     public void draw(Graphics g) {
 
-        // 1. Draw background
         g.drawImage(background, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
 
-        // 2. Draw characters (THIS is where the scaling code goes)
-        for (int i = 0; i < characters.size(); i++) {
-            BufferedImage img = characters.get(i);
+        for (int i = 0; i < 3; i++) {
+            // Use modulo to ensure the character loops within its own frame count
+            int frame = aniIndex % characterFrameCounts[i];
+            BufferedImage img = animations[i][frame];
+
             Point pos = characterPositions.get(i);
-
-            double scale = 0.4; // 40% size (make them smaller)
-
-            int w = (int)(img.getWidth() * scale);
-            int h = (int)(img.getHeight() * scale);
+            int w = (int)(256 * characterScales[i] * Game.SCALE);
+            int h = (int)(256 * characterScales[i] * Game.SCALE);
 
             g.drawImage(img, pos.x, pos.y, w, h, null);
         }
 
+
         // 3. Draw text
         g.setColor(Color.WHITE);
         g.setFont(new Font("Arial", Font.BOLD, 40));
-        g.drawString("CONGRATULATIONS!", 100, 100);
+        g.drawString("CONGRATULATIONS!", 70, 50);
 
         g.setFont(new Font("Arial", Font.PLAIN, 28));
-        g.drawString("You got the job!", 220, 250);
+        g.drawString("You got the job!", 150, 250);
 
         g.setFont(new Font("Arial", Font.PLAIN, 20));
-        g.drawString("Press E to return to the menu", 200, 350);
+        g.drawString("Press E to return to the menu", 70, 200);
     }
 
     @Override

@@ -95,7 +95,7 @@ public class Game implements Runnable {
     private void initStates() {
         menu            = new Menu(this);
         playing         = new Playing(this);
-        congratulations = new Congratulations(this, playing);
+        congratulations = new Congratulations(this);
     }
 
     private void initCamera() {
