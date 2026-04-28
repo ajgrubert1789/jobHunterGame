@@ -18,6 +18,7 @@ public class LoadSave {
 
     public static final String LEVEL_BACKGROUND = "res/level_background.png";
     public static final String MENU_BACKGROUND = "res/menu_background.png";
+    public static final String CONGRATS_BACKGROUND = "res/congrats_background.png";
 
     public static final String FLOPPY_DISK_SPRITE = "res/floppy_disk.png";
 

@@ -1,5 +1,6 @@
 package main;
 
+import Audio.MusicManager;
 import entities.Player;
 import gamestates.Congratulations;
 import gamestates.GameState;
@@ -13,6 +14,8 @@ import ui.FadeManager;
 import java.awt.*;
 
 public class Game implements Runnable {
+
+    private final MusicManager musicManager = new MusicManager();
 
     // ------------------------------------------------------------
     // Window & Panel
@@ -76,6 +79,7 @@ public class Game implements Runnable {
         fadeManager     = new FadeManager();
 
         initStates();
+        musicManager.play("menu");
         initCamera();
 
         gamePanel  = new GamePanel(this);
@@ -91,7 +95,7 @@ public class Game implements Runnable {
     private void initStates() {
         menu            = new Menu(this);
         playing         = new Playing(this);
-        congratulations = new Congratulations(this);
+        congratulations = new Congratulations(this, playing);
     }
 
     private void initCamera() {
@@ -246,7 +250,17 @@ public class Game implements Runnable {
     }
 
 
-    public void setGameState(GameState gameState) {
-        GameState.state = gameState;
+    public void setGameState(GameState newState) {
+        // Stop any currently playing music before switching states
+        musicManager.stopAll();
+
+        GameState.state = newState;
+
+        switch (newState) {
+            case MENU -> musicManager.play("menu");
+            case PLAYING -> musicManager.play("playing");
+            case CONGRATULATIONS -> musicManager.play("congrats");
+            default -> {}
+        }
     }
 }
