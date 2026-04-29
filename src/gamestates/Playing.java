@@ -48,18 +48,17 @@ public class Playing extends State implements StateMethods {
     @Override
     public void update() {
 
-        // Dialogue mode freezes gameplay
+        // Dialogue manager always needs to update (for timers/animations)
+        dialogueManager.update();
+
+        // Dialogue mode freezes gameplay logic
         if (dialogueManager.isActive()) {
-            dialogueManager.update();
             return;
         }
 
         player.update();
         enemyManager.update();
         enemyManager.checkPlayerHit(player);
-
-
-
 
         game.getCamera().update(
                 (int) player.getX(),
@@ -68,7 +67,7 @@ public class Playing extends State implements StateMethods {
 
         levelManager.update();
         itemManager.update(player);
-        dialogueManager.update();
+
 
 
     }
@@ -78,12 +77,20 @@ public class Playing extends State implements StateMethods {
     // ------------------------------------------------------------
     @Override
     public void draw(Graphics g) {
-        levelManager.draw(g);
+        float camX = game.getCamera().getX();
+        float camY = game.getCamera().getY();
+
+        levelManager.draw(g, camX, camY);
         itemManager.draw(g);
         enemyManager.draw(g);
-        player.draw(g);
 
-        dialogueManager.draw(g, game.getCamera().getX(), game.getCamera().getY());
+        if (Game.DRAW_HITBOX) {
+            // Now camX and camY are defined and passed correctly
+            levelManager.drawGrid(g, camX, camY);
+        }
+
+        player.draw(g);
+        dialogueManager.draw(g, camX, camY);
     }
 
     // ------------------------------------------------------------

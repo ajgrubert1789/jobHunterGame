@@ -15,6 +15,8 @@ public abstract class Enemy extends Entity{
 
     private boolean alive = true;
 
+    public abstract String[] getDialogueLines();
+
     // Scaled Offsets
     protected float hitboxOffsetX = 0 * Game.SCALE;
     protected float hitboxOffsetY = -16 * Game.SCALE;
@@ -132,6 +134,8 @@ public abstract class Enemy extends Entity{
             direction *= -1; // turn around
         }
     }
+
+
 
     protected void moveVertical() {
         float newY = y + ySpeed;
